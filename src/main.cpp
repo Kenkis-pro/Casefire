@@ -5,7 +5,7 @@
 int main() {
     Game game;
     if (!game.init()) {
-        std::cerr << "CASEFIRE failed to initialize.\n";
+        std::cerr << "CASEFIRE не удалось запустить.\n";
         return 1;
     }
 

@@ -1,0 +1,61 @@
+#include "glad/glad.h"
+
+PFNGLGENVERTEXARRAYSPROC glad_glGenVertexArrays = 0;
+PFNGLBINDVERTEXARRAYPROC glad_glBindVertexArray = 0;
+PFNGLDELETEVERTEXARRAYSPROC glad_glDeleteVertexArrays = 0;
+PFNGLGENBUFFERSPROC glad_glGenBuffers = 0;
+PFNGLBINDBUFFERPROC glad_glBindBuffer = 0;
+PFNGLBUFFERDATAPROC glad_glBufferData = 0;
+PFNGLDELETEBUFFERSPROC glad_glDeleteBuffers = 0;
+PFNGLVERTEXATTRIBPOINTERPROC glad_glVertexAttribPointer = 0;
+PFNGLENABLEVERTEXATTRIBARRAYPROC glad_glEnableVertexAttribArray = 0;
+PFNGLCREATESHADERPROC glad_glCreateShader = 0;
+PFNGLSHADERSOURCEPROC glad_glShaderSource = 0;
+PFNGLCOMPILESHADERPROC glad_glCompileShader = 0;
+PFNGLGETSHADERIVPROC glad_glGetShaderiv = 0;
+PFNGLGETSHADERINFOLOGPROC glad_glGetShaderInfoLog = 0;
+PFNGLDELETESHADERPROC glad_glDeleteShader = 0;
+PFNGLCREATEPROGRAMPROC glad_glCreateProgram = 0;
+PFNGLATTACHSHADERPROC glad_glAttachShader = 0;
+PFNGLLINKPROGRAMPROC glad_glLinkProgram = 0;
+PFNGLGETPROGRAMIVPROC glad_glGetProgramiv = 0;
+PFNGLUSEPROGRAMPROC glad_glUseProgram = 0;
+PFNGLDELETEPROGRAMPROC glad_glDeleteProgram = 0;
+PFNGLUNIFORMMATRIX4FVPROC glad_glUniformMatrix4fv = 0;
+PFNGLUNIFORM3FPROC glad_glUniform3f = 0;
+PFNGLUNIFORM1FPROC glad_glUniform1f = 0;
+PFNGLUNIFORM3FVPROC glad_glUniform3fv = 0;
+PFNGLGETUNIFORMLOCATIONPROC glad_glGetUniformLocation = 0;
+
+#define LOAD_GL(name, type) do { glad_##name = (type)load(#name); if (!glad_##name) return 0; } while (0)
+
+int gladLoadGLLoader(GLADloadproc load) {
+    if (!load) return 0;
+    LOAD_GL(glGenVertexArrays, PFNGLGENVERTEXARRAYSPROC);
+    LOAD_GL(glBindVertexArray, PFNGLBINDVERTEXARRAYPROC);
+    LOAD_GL(glDeleteVertexArrays, PFNGLDELETEVERTEXARRAYSPROC);
+    LOAD_GL(glGenBuffers, PFNGLGENBUFFERSPROC);
+    LOAD_GL(glBindBuffer, PFNGLBINDBUFFERPROC);
+    LOAD_GL(glBufferData, PFNGLBUFFERDATAPROC);
+    LOAD_GL(glDeleteBuffers, PFNGLDELETEBUFFERSPROC);
+    LOAD_GL(glVertexAttribPointer, PFNGLVERTEXATTRIBPOINTERPROC);
+    LOAD_GL(glEnableVertexAttribArray, PFNGLENABLEVERTEXATTRIBARRAYPROC);
+    LOAD_GL(glCreateShader, PFNGLCREATESHADERPROC);
+    LOAD_GL(glShaderSource, PFNGLSHADERSOURCEPROC);
+    LOAD_GL(glCompileShader, PFNGLCOMPILESHADERPROC);
+    LOAD_GL(glGetShaderiv, PFNGLGETSHADERIVPROC);
+    LOAD_GL(glGetShaderInfoLog, PFNGLGETSHADERINFOLOGPROC);
+    LOAD_GL(glDeleteShader, PFNGLDELETESHADERPROC);
+    LOAD_GL(glCreateProgram, PFNGLCREATEPROGRAMPROC);
+    LOAD_GL(glAttachShader, PFNGLATTACHSHADERPROC);
+    LOAD_GL(glLinkProgram, PFNGLLINKPROGRAMPROC);
+    LOAD_GL(glGetProgramiv, PFNGLGETPROGRAMIVPROC);
+    LOAD_GL(glUseProgram, PFNGLUSEPROGRAMPROC);
+    LOAD_GL(glDeleteProgram, PFNGLDELETEPROGRAMPROC);
+    LOAD_GL(glUniformMatrix4fv, PFNGLUNIFORMMATRIX4FVPROC);
+    LOAD_GL(glUniform3f, PFNGLUNIFORM3FPROC);
+    LOAD_GL(glUniform1f, PFNGLUNIFORM1FPROC);
+    LOAD_GL(glUniform3fv, PFNGLUNIFORM3FVPROC);
+    LOAD_GL(glGetUniformLocation, PFNGLGETUNIFORMLOCATIONPROC);
+    return 1;
+}

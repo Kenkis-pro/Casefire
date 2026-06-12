@@ -101,13 +101,8 @@ bool Game::initWindowAndGL() {
     glfwSetKeyCallback(m_window, keyCallback);
     glfwSetInputMode(m_window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
 
-#if defined(CASEFIRE_GLAD_LEGACY)
-    bool gladOk = gladLoadGLLoader(reinterpret_cast<GLADloadproc>(glfwGetProcAddress));
-#elif defined(CASEFIRE_GLAD_GL)
-    bool gladOk = gladLoadGL(reinterpret_cast<GLADloadfunc>(glfwGetProcAddress)) != 0;
-#endif
-    if (!gladOk) {
-        std::cerr << "Failed to initialize glad.\n";
+    if (!gladLoadGLLoader(reinterpret_cast<GLADloadproc>(glfwGetProcAddress))) {
+        std::cerr << "Не удалось инициализировать встроенный загрузчик glad.\n";
         return false;
     }
     glViewport(0, 0, m_width, m_height);
@@ -210,7 +205,7 @@ void Game::update(float dt) {
             if (m_profile.health <= 0) {
                 m_profile.health = 0;
                 m_state = ScreenState::GameOver;
-                setMessage("GAME OVER - press R to restart");
+                setMessage("ИГРА ОКОНЧЕНА — нажмите R для перезапуска");
                 saveAll();
             }
         }
@@ -328,7 +323,7 @@ void Game::equipSkin(int id) {
     if (id == 0 || hasSkin(id)) {
         m_profile.equippedSkin = id;
         const Skin* skin = findSkin(id);
-        setMessage(std::string("Equipped ") + (skin ? skin->name : "default"));
+        setMessage(std::string("Выбран скин: ") + (skin ? skin->name : "стандартный"));
     }
 }
 
@@ -349,17 +344,17 @@ void Game::reloadAdminFlag() {
 void Game::updateTitle() {
     std::ostringstream title;
     if (m_state == ScreenState::MainMenu) {
-        title << "CASEFIRE | MAIN MENU | ENTER play | S shop | F1 admin | " << m_statusMessage;
+        title << "CASEFIRE | ГЛАВНОЕ МЕНЮ | ENTER играть | S магазин | F1 админ | " << m_statusMessage;
     } else if (m_state == ScreenState::Shop) {
         Shop shop(*this);
         title << shop.statusLine();
     } else if (m_state == ScreenState::GameOver) {
-        title << "CASEFIRE | GAME OVER | R restart | Coins: " << m_profile.coins;
+        title << "CASEFIRE | ИГРА ОКОНЧЕНА | R перезапуск | Монеты: " << m_profile.coins;
     } else if (m_state == ScreenState::Banned) {
-        title << "CASEFIRE | PLAYER BANNED | Ask admin to unban in profile.json/admin panel";
+        title << "CASEFIRE | ИГРОК ЗАБАНЕН | Разбаньте игрока через profile.json или админ-панель";
     } else {
-        title << "CASEFIRE | HP: " << m_profile.health << " | Coins: " << m_profile.coins
-              << " | Enemies: " << m_enemies.size() << " | F1 admin | " << m_statusMessage;
+        title << "CASEFIRE | HP: " << m_profile.health << " | Монеты: " << m_profile.coins
+              << " | Враги: " << m_enemies.size() << " | F1 админ | " << m_statusMessage;
     }
     glfwSetWindowTitle(m_window, title.str().c_str());
 }
@@ -404,7 +399,7 @@ void Game::loadAll() {
         for (const auto& item : skinsData) {
             auto color = item.value("color", std::vector<float>{0.25f, 0.25f, 0.25f});
             if (color.size() < 3) color = {0.25f, 0.25f, 0.25f};
-            m_skins.push_back({item.value("id", 0), item.value("name", std::string("Skin")), {color[0], color[1], color[2]}, item.value("price", 100), item.value("chance", 20.0f)});
+            m_skins.push_back({item.value("id", 0), item.value("name", std::string("Скин")), {color[0], color[1], color[2]}, item.value("price", 100), item.value("chance", 20.0f)});
         }
     }
 
@@ -428,11 +423,11 @@ void Game::ensureDefaultJsonFiles() {
     }
     if (!std::filesystem::exists("skins.json")) {
         json skins = json::array({
-            {{"id", 0}, {"name", "Standard"}, {"color", {0.24f, 0.24f, 0.24f}}, {"price", 0}, {"chance", 45.0f}},
-            {{"id", 1}, {"name", "Blue"}, {"color", {0.1f, 0.25f, 0.95f}}, {"price", 100}, {"chance", 25.0f}},
-            {{"id", 2}, {"name", "Red"}, {"color", {0.9f, 0.08f, 0.05f}}, {"price", 150}, {"chance", 15.0f}},
-            {{"id", 3}, {"name", "Gold"}, {"color", {1.0f, 0.76f, 0.05f}}, {"price", 300}, {"chance", 10.0f}},
-            {{"id", 4}, {"name", "Rainbow"}, {"color", {0.75f, 0.15f, 1.0f}}, {"price", 500}, {"chance", 5.0f}}
+            {{"id", 0}, {"name", "Стандартный"}, {"color", {0.24f, 0.24f, 0.24f}}, {"price", 0}, {"chance", 45.0f}},
+            {{"id", 1}, {"name", "Синий"}, {"color", {0.1f, 0.25f, 0.95f}}, {"price", 100}, {"chance", 25.0f}},
+            {{"id", 2}, {"name", "Красный"}, {"color", {0.9f, 0.08f, 0.05f}}, {"price", 150}, {"chance", 15.0f}},
+            {{"id", 3}, {"name", "Золотой"}, {"color", {1.0f, 0.76f, 0.05f}}, {"price", 300}, {"chance", 10.0f}},
+            {{"id", 4}, {"name", "Радужный"}, {"color", {0.75f, 0.15f, 1.0f}}, {"price", 500}, {"chance", 5.0f}}
         });
         std::ofstream("skins.json") << skins.dump(4);
     }
@@ -455,7 +450,7 @@ GLuint Game::compileShader(GLenum type, const std::string& source) const {
     if (!success) {
         char log[512];
         glGetShaderInfoLog(shader, sizeof(log), nullptr, log);
-        std::cerr << "Shader compile error: " << log << "\n";
+        std::cerr << "Ошибка компиляции шейдера: " << log << "\n";
         return 0;
     }
     return shader;

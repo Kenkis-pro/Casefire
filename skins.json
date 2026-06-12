@@ -1,35 +1,35 @@
 [
     {
         "id": 0,
-        "name": "Standard",
+        "name": "Стандартный",
         "color": [0.24, 0.24, 0.24],
         "price": 0,
         "chance": 45.0
     },
     {
         "id": 1,
-        "name": "Blue",
+        "name": "Синий",
         "color": [0.1, 0.25, 0.95],
         "price": 100,
         "chance": 25.0
     },
     {
         "id": 2,
-        "name": "Red",
+        "name": "Красный",
         "color": [0.9, 0.08, 0.05],
         "price": 150,
         "chance": 15.0
     },
     {
         "id": 3,
-        "name": "Gold",
+        "name": "Золотой",
         "color": [1.0, 0.76, 0.05],
         "price": 300,
         "chance": 10.0
     },
     {
         "id": 4,
-        "name": "Rainbow",
+        "name": "Радужный",
         "color": [0.75, 0.15, 1.0],
         "price": 500,
         "chance": 5.0

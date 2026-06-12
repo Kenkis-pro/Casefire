@@ -1,14 +1,6 @@
 #pragma once
 
-#if __has_include(<glad/glad.h>)
 #include <glad/glad.h>
-#define CASEFIRE_GLAD_LEGACY 1
-#elif __has_include(<glad/gl.h>)
-#include <glad/gl.h>
-#define CASEFIRE_GLAD_GL 1
-#else
-#error "CASEFIRE requires glad headers. Install glad with pacman."
-#endif
 #define GLFW_INCLUDE_NONE
 #include <GLFW/glfw3.h>
 #include <glm/glm.hpp>
@@ -134,7 +126,7 @@ private:
     std::vector<Skin> m_skins;
     int m_caseCost{100};
     bool m_adminEnabled{false};
-    std::string m_statusMessage{"Press ENTER to play, S for shop, ESC to quit"};
+    std::string m_statusMessage{"ENTER — играть, S — магазин, ESC — выход"};
 
     std::vector<Enemy> m_enemies;
     std::vector<glm::vec3> m_walls;

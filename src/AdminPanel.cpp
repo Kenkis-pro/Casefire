@@ -12,7 +12,7 @@ void AdminPanel::openConsole() {
     m_game.reloadAdminFlag();
     if (!m_game.isAdmin()) {
         m_game.playSound(SoundId::Error);
-        m_game.setMessage("Admin panel denied: admin.json has admin=false");
+        m_game.setMessage("Доступ запрещён: в admin.json указано admin=false");
         return;
     }
 
@@ -30,7 +30,7 @@ void AdminPanel::openConsole() {
         switch (choice) {
         case 1: {
             int amount = 0;
-            std::cout << "Coins to add: ";
+            std::cout << "Сколько монет начислить: ";
             std::cin >> amount;
             m_game.profile().coins = std::max(0, m_game.profile().coins + amount);
             m_game.saveAll();
@@ -38,7 +38,7 @@ void AdminPanel::openConsole() {
         }
         case 2: {
             int id = 0;
-            std::cout << "Skin id to grant: ";
+            std::cout << "ID скина для выдачи: ";
             std::cin >> id;
             if (m_game.findSkin(id) && !m_game.hasSkin(id)) {
                 m_game.inventory().push_back(id);
@@ -51,20 +51,20 @@ void AdminPanel::openConsole() {
         }
         case 3: {
             int cost = 100;
-            std::cout << "New case cost: ";
+            std::cout << "Новая цена кейса: ";
             std::cin >> cost;
             m_game.caseCost() = std::max(0, cost);
             m_game.saveAll();
             break;
         }
         case 4: {
-            std::cout << "Enter chances in percent. Sum must be 100.\n";
+            std::cout << "Введите шансы в процентах. Сумма должна быть 100.\n";
             for (auto& skin : m_game.skins()) {
                 std::cout << skin.id << " " << skin.name << ": ";
                 std::cin >> skin.chance;
             }
             if (!validateChances()) {
-                std::cout << "Warning: chances do not sum to 100; normalize them manually for predictable drops.\n";
+                std::cout << "Предупреждение: сумма шансов не равна 100; исправьте значения для предсказуемых выпадений.\n";
             }
             m_game.saveAll();
             break;
@@ -86,19 +86,19 @@ void AdminPanel::openConsole() {
             break;
         }
     }
-    m_game.setMessage("Admin changes saved and applied");
+    m_game.setMessage("Изменения админ-панели сохранены и применены");
 }
 
 void AdminPanel::printMenu() const {
-    std::cout << "\n=== CASEFIRE ADMIN ===\n"
-              << "1. Add coins\n"
-              << "2. Grant skin by id\n"
-              << "3. Change case cost\n"
-              << "4. Change skin drop chances\n"
-              << "5. Ban player\n"
-              << "6. Unban player\n"
-              << "7. Exit panel\n"
-              << "Choice: ";
+    std::cout << "\n=== АДМИН-ПАНЕЛЬ CASEFIRE ===\n"
+              << "1. Начислить монеты\n"
+              << "2. Выдать скин по ID\n"
+              << "3. Изменить цену кейса\n"
+              << "4. Изменить шансы выпадения скинов\n"
+              << "5. Забанить игрока\n"
+              << "6. Разбанить игрока\n"
+              << "7. Выйти из панели\n"
+              << "Выбор: ";
 }
 
 bool AdminPanel::validateChances() const {

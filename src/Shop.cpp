@@ -24,7 +24,7 @@ void Shop::handleKey(int key) {
 void Shop::openCase() {
     if (m_game.profile().coins < m_game.caseCost()) {
         m_game.playSound(SoundId::Error);
-        m_game.setMessage("Not enough coins for a case");
+        m_game.setMessage("Недостаточно монет для открытия кейса");
         return;
     }
 
@@ -37,14 +37,14 @@ void Shop::openCase() {
     m_game.equipSkin(skinId);
     m_game.saveAll();
     m_game.playSound(SoundId::CaseOpen);
-    m_game.setMessage(std::string("Case opened: ") + (skin ? skin->name : "unknown skin"));
+    m_game.setMessage(std::string("Кейс открыт: ") + (skin ? skin->name : "неизвестный скин"));
 }
 
 void Shop::sellEquippedSkin() {
     const int id = m_game.profile().equippedSkin;
     if (id == 0) {
         m_game.playSound(SoundId::Error);
-        m_game.setMessage("Default skin cannot be sold");
+        m_game.setMessage("Стандартный скин нельзя продать");
         return;
     }
 
@@ -53,7 +53,7 @@ void Shop::sellEquippedSkin() {
     const Skin* skin = m_game.findSkin(id);
     if (it == inventory.end() || !skin) {
         m_game.playSound(SoundId::Error);
-        m_game.setMessage("Equipped skin is not in inventory");
+        m_game.setMessage("Выбранного скина нет в инвентаре");
         return;
     }
 
@@ -61,7 +61,7 @@ void Shop::sellEquippedSkin() {
     inventory.erase(it);
     m_game.equipSkin(0);
     m_game.saveAll();
-    m_game.setMessage("Skin sold for 50% of price");
+    m_game.setMessage("Скин продан за 50% цены");
 }
 
 void Shop::equipNextSkin() {
@@ -82,10 +82,10 @@ void Shop::equipNextSkin() {
 std::string Shop::statusLine() const {
     const Skin* equipped = m_game.findSkin(m_game.profile().equippedSkin);
     std::ostringstream out;
-    out << "SHOP | Coins: " << m_game.profile().coins
-        << " | Case: " << m_game.caseCost()
-        << " | Equipped: " << (equipped ? equipped->name : "unknown")
-        << " | O open, E equip next, X sell, B back";
+    out << "МАГАЗИН | Монеты: " << m_game.profile().coins
+        << " | Кейс: " << m_game.caseCost()
+        << " | Выбрано: " << (equipped ? equipped->name : "неизвестно")
+        << " | O открыть, E следующий скин, X продать, B назад";
     return out.str();
 }
 
